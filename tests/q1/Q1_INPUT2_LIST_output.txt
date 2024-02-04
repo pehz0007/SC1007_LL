@@ -1,1 +1,1 @@
-The resulting linked list after moving odd integers to the back of the linked list is: 10 10 34 45 23
+The resulting sorted linked list is: 5 7 9

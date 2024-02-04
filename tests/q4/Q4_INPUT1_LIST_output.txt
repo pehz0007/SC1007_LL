@@ -1,0 +1,2 @@
+Front linked list: 2 3 5
+Back linked list: 7 8 9 

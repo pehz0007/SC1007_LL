@@ -2,7 +2,7 @@
 
 /* SC1007 Data Structures and Algorithms
 Assignment 1 - Linked List Questions
-Purpose: Implementing the required functions for Question 3 */
+Purpose: Implementing the required functions for Question 1 */
 
 //////////////////////////////////////////////////////////////////////////////////
 
@@ -11,50 +11,49 @@ Purpose: Implementing the required functions for Question 3 */
 
 //////////////////////////////////////////////////////////////////////////////////
 
-typedef struct _listnode
-{
+typedef struct _listnode{
 	int item;
 	struct _listnode *next;
 } ListNode;			// You should not change the definition of ListNode
 
-typedef struct _linkedlist
-{
+typedef struct _linkedlist{
 	int size;
 	ListNode *head;
 } LinkedList;			// You should not change the definition of LinkedList
 
 
-//////////////////////// function prototypes /////////////////////////////////////
+///////////////////////// function prototypes ////////////////////////////////////
 
-// You should not change the prototype of this function
-void moveOddItemsToBack(LinkedList *ll);
+//You should not change the prototype of this function
+int insertSortedLL(LinkedList *ll, int item);
 
 void printList(LinkedList *ll);
 void removeAllItems(LinkedList *ll);
-ListNode * findNode(LinkedList *ll, int index);
+ListNode *findNode(LinkedList *ll, int index);
 int insertNode(LinkedList *ll, int index, int value);
 int removeNode(LinkedList *ll, int index);
+
 
 //////////////////////////// main() //////////////////////////////////////////////
 
 int main()
 {
-	setbuf(stdout, 0 );
 	LinkedList ll;
 	int c, i, j;
 	c = 1;
+
 	//Initialize the linked list 1 as an empty linked list
 	ll.head = NULL;
 	ll.size = 0;
 
-
-	printf("1: Insert an integer to the linked list:\n");
-	printf("2: Move all odd integers to the back of the linked list:\n");
-	printf("0: Quit:\n");
+	printf("1: Insert an integer to the sorted linked list:\n");
+	printf("2: Print the index of the most recent input value:\n");
+	printf("3: Print sorted linked list:\n");
+	printf("0: Quit:");
 
 	while (c != 0)
 	{
-		printf("Please input your choice(1/2/0): ");
+		printf("\nPlease input your choice(1/2/3/0): ");
 		scanf("%d", &c);
 
 		switch (c)
@@ -62,13 +61,15 @@ int main()
 		case 1:
 			printf("Input an integer that you want to add to the linked list: ");
 			scanf("%d", &i);
-			j = insertNode(&ll, ll.size, i);
+			j = insertSortedLL(&ll, i);
 			printf("The resulting linked list is: ");
 			printList(&ll);
 			break;
 		case 2:
-			moveOddItemsToBack(&ll); // You need to code this function
-			printf("The resulting linked list after moving odd integers to the back of the linked list is: ");
+			printf("The value %d was added at index %d\n", i, j);
+			break;
+		case 3:
+			printf("The resulting sorted linked list is: ");
 			printList(&ll);
 			removeAllItems(&ll);
 			break;
@@ -79,45 +80,34 @@ int main()
 			printf("Choice unknown;\n");
 			break;
 		}
+
+
 	}
 	return 0;
 }
 
 //////////////////////////////////////////////////////////////////////////////////
 
-void moveOddItemsToBack(LinkedList *ll)
-{
-	//add your code here
-	ListNode* firstEvenNode = NULL, *evenNode = NULL;
-	ListNode* firstOddNode = NULL, *oddNode = NULL;
-
+int insertSortedLLIndex(LinkedList *ll, int item) {
 	ListNode* currNode = ll->head;
-	while (currNode != NULL) {
-		if(currNode->item % 2 == 1){ // Check odd
-			if(firstOddNode == NULL) firstOddNode = currNode;
-			if(oddNode) oddNode->next = currNode; // Link the previous odd node to the current odd node
-			oddNode = currNode;
-
-		}else {
-			if(firstEvenNode == NULL) firstEvenNode = currNode;
-			if(evenNode) evenNode->next = currNode; // Link the previous even node to the current even node
-			evenNode = currNode;
-		}
+	int i;
+	for (i = 0; i < ll->size; i++) {
+		if(currNode->item > item) return i;
+		if(item == currNode->item) return -1;
 		currNode = currNode->next;
 	}
-
-	// Set the last odd node to point to NULL
-	if(oddNode != NULL) {
-		oddNode->next = NULL;
-	}
-
-	// If there is no even node this code wont run
-	if(firstEvenNode != NULL) {
-		ll->head = firstEvenNode; // Set the head of the linked list to the first even node
-		if(evenNode != NULL) evenNode->next = firstOddNode; // Set the last even node to the first odd node
-	}
+	return i;
 }
 
+
+int insertSortedLL(LinkedList *ll, int item)
+{
+	// add your code here
+	int i = insertSortedLLIndex(ll, item);
+	if(i != -1) insertNode(ll, i, item);
+	return i;
+
+}
 ///////////////////////////////////////////////////////////////////////////////////
 
 void printList(LinkedList *ll){
@@ -179,7 +169,7 @@ int insertNode(LinkedList *ll, int index, int value){
 
 	ListNode *pre, *cur;
 
-	if (ll == NULL || index < 0 || index > ll->size + 1)
+	if (ll == NULL || index < 0 || index >= ll->size + 1)
 		return -1;
 
 	// If empty list or inserting first node, need to update head pointer
