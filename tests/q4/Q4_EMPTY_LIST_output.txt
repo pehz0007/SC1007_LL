@@ -1,1 +1,2 @@
-The resulting linked list after moving odd integers to the back of the linked list is: Empty
+Front linked list: Empty
+Back linked list: Empty
