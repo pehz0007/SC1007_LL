@@ -1,0 +1,2 @@
+The resulting linked list 1: Empty
+The resulting linked list 2: Empty

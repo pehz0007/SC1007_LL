@@ -1,0 +1,2 @@
+The resulting linked list 1: 10 10 45 34 23
+The resulting linked list 2: Empty
